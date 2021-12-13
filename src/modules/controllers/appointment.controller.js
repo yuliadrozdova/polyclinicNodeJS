@@ -33,7 +33,10 @@ module.exports.updateTrick = (req, res, next) => {
     }).catch(err => console.log(err))
 }
 
+//delete trick
 module.exports.deleteTrick = (req, res, next) => {
+
+    console.log('555 ', req);
     const {namePatient, nameDoctor, dateAppointment, complaints} = req.body;
 
     const newTrick = Trick.deleteOne({namePatient, nameDoctor, dateAppointment, complaints});
