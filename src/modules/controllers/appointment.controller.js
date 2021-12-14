@@ -16,32 +16,32 @@ module.exports.createTrick = (req, res, next) => {
 
     const newTrick = new Trick({namePatient, nameDoctor, date, textComplaints});
     newTrick.save().then(result => {
-        res.send('Trick created');
-        console.log(result);
+        res.send({data: result});
+        console.log('result', result);
     }).catch(err => console.log(err))
 }
 
 
-//update Trick
+//update Trick !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
 module.exports.updateTrick = (req, res, next) => {
     const {namePatient, nameDoctor, dateAppointment, complaints} = req.body;
 
-    const newTrick = Trick({namePatient, nameDoctor, dateAppointment, complaints});
-    newTrick.save().then(result => {
-        res.send('Trick created');
+    const updateTrick = Trick.updateOne({namePatient, nameDoctor, dateAppointment, complaints});
+    updateTrick.save().then(result => {
+        res.send({data: result});
         console.log(result);
     }).catch(err => console.log(err))
 }
 
 //delete trick
 module.exports.deleteTrick = (req, res, next) => {
+    const {id} = req.body;
+    console.log('req.body ', req.body);
+    console.log('{id} ', {id});
 
-    console.log('555 ', req);
-    const {namePatient, nameDoctor, dateAppointment, complaints} = req.body;
-
-    const newTrick = Trick.deleteOne({namePatient, nameDoctor, dateAppointment, complaints});
-    newTrick.then(result => {
-        res.send('Trick created');
+    const deleteTrick = Trick.deleteOne(id);
+    deleteTrick.then(result => {
+        res.send({data: result});
         console.log(result);
     }).catch(err => console.log(err))
 }
