@@ -26,7 +26,7 @@ router.post('/loginUser', loginUser);
 router.get('/allTricks', getAllTricks);
 router.post('/createTrick', createTrick);
 router.put('/updateTrick', updateTrick);
-router.delete('/deleteTrick', deleteTrick);
+router.delete('/deleteTrick/:id', deleteTrick);
 
 
 
