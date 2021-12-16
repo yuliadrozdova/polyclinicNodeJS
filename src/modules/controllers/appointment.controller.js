@@ -24,15 +24,26 @@ module.exports.deleteTrick = (req, res, next) => {
     }).catch(err => console.log(err))
 }
 
-
-
 //update Trick -
-module.exports.updateTrick = (req, res, next) => {
-    const {namePatient, nameDoctor, dateAppointment, complaints} = req.body;
+module.exports.updateTrick = async (req, res, next) => {
+    const params = req.body;
 
-    const updateTrick = Trick.updateOne({namePatient, nameDoctor, dateAppointment, complaints});
-    updateTrick.save().then(result => {
-        res.send({data: result});
-        console.log(result);
-    }).catch(err => console.log(err))
+    try {
+        const updateTrick = await Trick.updateOne({namePatient: params.namePatient,
+                nameDoctor: params.nameDoctor,
+                date: params.date,
+                textComplaints: params.textComplaints
+            },
+            {
+                namePatient: params.updateNamePatient,
+                nameDoctor: params.updateNameDoctor,
+                date: params.updateDate,
+                textComplaints: params.updateTextComplaints
+            });
+
+        res.send(updateTrick);
+
+    } catch (e) {
+        res.status(500).send(e);
+    }
 }
