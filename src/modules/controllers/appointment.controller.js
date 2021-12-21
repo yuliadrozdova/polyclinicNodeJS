@@ -1,10 +1,13 @@
 const Trick = require("../../db/models/appointmentModel");
 
 //get all Tricks +
-module.exports.getAllTricks = (req, res, next) => {
-    Trick.find().then(result => {
+module.exports.getAllTricks = async (req, res, next) => {
+    try {
+        const result = await Trick.find();
         res.send({data: result});
-    });
+    } catch (e) {
+        res.statusCode(500).send(e);
+    }
 }
 
 //create Trick +
@@ -18,7 +21,7 @@ module.exports.createTrick = (req, res, next) => {
 
 //delete trick +
 module.exports.deleteTrick = (req, res, next) => {
-    const deleteTrick = Trick.deleteOne( { _id : req.params.id }  );
+    const deleteTrick = Trick.deleteOne({_id: req.params.id});
     deleteTrick.then(result => {
         res.send({data: result});
     }).catch(err => console.log(err))
@@ -27,9 +30,11 @@ module.exports.deleteTrick = (req, res, next) => {
 //update Trick -
 module.exports.updateTrick = async (req, res, next) => {
     const params = req.body;
+    console.log('params ', params);
 
     try {
-        const updateTrick = await Trick.updateOne({namePatient: params.namePatient,
+        const updateTrick = await Trick.updateOne({
+                namePatient: params.namePatient,
                 nameDoctor: params.nameDoctor,
                 date: params.date,
                 textComplaints: params.textComplaints
