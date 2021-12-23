@@ -35,11 +35,9 @@ module.exports.deleteTrick = async (req, res, next) => {
     }
 }
 
-//update Trick -
+//update Trick +
 module.exports.updateTrick = async (req, res, next) => {
     const params = req.body.values;
-    console.log('params ', params);
-
     try {
         const updateTrick = await Trick.updateOne({_id : params._id},
             {$set: {
@@ -48,9 +46,7 @@ module.exports.updateTrick = async (req, res, next) => {
                 date: params.date,
                 textComplaints: params.textComplaints}
             });
-
         res.send(updateTrick);
-
     } catch (e) {
         res.status(500).send(e);
     }
