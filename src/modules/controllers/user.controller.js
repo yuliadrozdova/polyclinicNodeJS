@@ -18,6 +18,12 @@ module.exports.getAllUsers = (req, res, next) => {
 //create user
 module.exports.createUser = (req, res, next) => {
     const {login, password} = req.body;
+    console.log('LOOOG! ', {login, password});
+
+    if ((login === '' || password === '') || (login === '' && password === '')) {
+        return res.status(400).json({message: "not valid ${user}"})
+    }
+
     const passwordHash = bcrypt.hashSync(password, 7);
     const newUser = new User({login, password: passwordHash});
     newUser.save().then(result => {
@@ -27,8 +33,9 @@ module.exports.createUser = (req, res, next) => {
 
     console.log('12345')
 
-    const token = generateAT(newUser._id);// не уверена
+    const token = generateAT(newUser._id); // не уверена
     return res.json({token});
+
 }
 
 //login User
