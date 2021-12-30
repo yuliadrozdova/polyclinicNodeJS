@@ -1,4 +1,4 @@
-const User = require("../../db/models/userModel");
+const User = require("../db/models/userModel");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const {secret} = require("./config");
@@ -7,6 +7,7 @@ const generateAT = (id) =>{
     const payload = { id };
     return jwt.sign(payload, secret, {expiresIn: "24h"});
 }
+
 
 //get all users
 module.exports.getAllUsers = (req, res, next) => {
@@ -18,7 +19,7 @@ module.exports.getAllUsers = (req, res, next) => {
 //create user
 module.exports.createUser = (req, res, next) => {
     const {login, password} = req.body;
-    console.log('LOOOG! ', {login, password});
+    // console.log('LOOOG! ', {login, password});
 
     if ((login === '' || password === '') || (login === '' && password === '')) {
         return res.status(400).json({message: "not valid ${user}"})
@@ -28,10 +29,10 @@ module.exports.createUser = (req, res, next) => {
     const newUser = new User({login, password: passwordHash});
     newUser.save().then(result => {
         res.send('User created');
-        console.log(result);
+        // console.log(result);
     }).catch(err => console.log(err))
 
-    console.log('12345')
+    // console.log('12345')
 
     const token = generateAT(newUser._id); // не уверена
     return res.json({token});
@@ -48,7 +49,7 @@ module.exports.loginUser = async (req, res, next) => {
     }
 
     const validPas = bcrypt.compareSync(password, user.password);
-    console.log(password);
+    // console.log(password);
     if (!validPas){
         return res.status(400).json({message: "not valid ${user}"})
     }
