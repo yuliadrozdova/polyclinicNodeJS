@@ -21,10 +21,14 @@ const {decode} = require("jsonwebtoken");
 
 const auth = async (req, res, next) => {
     const token = req.headers.authorization;
+
+    await console.log('/// ', jwt);
     let decoded = await jwt.verify(token, secret);
 
-    const createTrick = req.body.namePatient;
-    console.log('createTrick ', createTrick);
+    // const createTrick = req;
+     console.log('createTrick ');
+
+
 
     if(token){
          try {
@@ -33,18 +37,19 @@ const auth = async (req, res, next) => {
         } catch(err) {
             console.log('err1')
         }
-    }else if(createTrick){
-        try {
-            req.userId = decoded.id;
-            await next();
-        } catch(err) {
-            console.log('err2')
-        }
-    }else if(createTrick){
+    // }else if(createTrick){
+    //     console.log('************')
+    //     try {
+    //         req.userId = decoded.id;
+    //         await next();
+    //     } catch(err) {
+    //         console.log('err2')
+    //     }
+    }else{
         res.send().statusCode(500);
     }
 
-    console.log('token ', token);
+   await console.log('token ', token);
     await   console.log(' req.userId ', req.userId);
 
 }
