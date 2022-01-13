@@ -17,10 +17,13 @@ module.exports.getAllUsers = (req, res, next) => {
 }
 
 //create user
-module.exports.createUser = (req, res, next) => {
+module.exports.createUser = async (req, res, next) => {
     const {login, password} = req.body;
-    // console.log('LOOOG! ', {login, password});
+    const user = await User.findOne({login});
 
+    if (user){
+        return res.status(400).json({message: "user ${user} already exists"})
+    }
     if ((login === '' || password === '') || (login === '' && password === '')) {
         return res.status(400).json({message: "not valid ${user}"})
     }
