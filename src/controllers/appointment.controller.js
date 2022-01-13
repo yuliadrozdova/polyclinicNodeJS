@@ -1,7 +1,7 @@
 const Trick = require("../db/models/appointmentModel");
 
 //get all Tricks +
-module.exports.getAllTricks = async (req, res, next) => {;
+module.exports.getAllTricks = async (req, res, next) => {
 
     console.log('222 ', req.userId);
 
