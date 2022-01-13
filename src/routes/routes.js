@@ -25,11 +25,6 @@ const auth = async (req, res, next) => {
     await console.log('/// ', jwt);
     let decoded = await jwt.verify(token, secret);
 
-    // const createTrick = req;
-     console.log('createTrick ');
-
-
-
     if(token){
          try {
               req.userId = decoded.id;
