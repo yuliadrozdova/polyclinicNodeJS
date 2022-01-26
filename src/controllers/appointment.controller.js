@@ -42,14 +42,16 @@ module.exports.deleteTrick = async (req, res, next) => {
 
 //update Trick +
 module.exports.updateTrick = async (req, res, next) => {
-    const params = req.body.values;
+
+    console.log(req.body)
+    const {namePatient, nameDoctor, date, textComplaints, id} = req.body;
     try {
-        const updateTrick = await Trick.updateOne({_id : params._id},
+        const updateTrick = await Trick.updateOne({_id : id},
             {$set: {
-                namePatient: params.namePatient,
-                nameDoctor: params.nameDoctor,
-                date: params.date,
-                textComplaints: params.textComplaints}
+                    namePatient: namePatient,
+                    nameDoctor: nameDoctor,
+                    date: date,
+                    textComplaints: textComplaints}
             });
         res.send(updateTrick);
     } catch (e) {
