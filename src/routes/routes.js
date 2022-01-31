@@ -5,7 +5,8 @@ const router = express.Router();
 const {
     getAllUsers,
     createUser,
-    loginUser
+    loginUser,
+    // refreshToken
 } = require('../controllers/user.controller');
 
 const {
@@ -26,6 +27,7 @@ router.get('/hello', (req, res, next) => {
 router.get('/allUsers',  getAllUsers);
 router.post('/createUser', createUser);
 router.post('/loginUser', loginUser);
+// router.post('/refreshToken', refreshToken);
 
 router.get('/allTricks', auth, getAllTricks);
 router.post('/createTrick/', auth, createTrick);

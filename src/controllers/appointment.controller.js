@@ -7,9 +7,10 @@ module.exports.getAllTricks = async (req, res, next) => {
 
     try {
         const result = await Trick.find({createdBy: req.userId});
-        res.send({data: result});
-    } catch (e) {
-        res.statusCode(500).send(e);
+        res.send({data: result}).status(200);
+    } catch (err) {
+        // res.statusCode(500).send(err);
+        res.status(500).send(err);
     }
 }
 
@@ -21,10 +22,10 @@ module.exports.createTrick = async (req, res, next) => {
         const {namePatient, nameDoctor, date, textComplaints} = req.body;
         const newTrick = new Trick({createdBy, namePatient, nameDoctor, date, textComplaints});
         const result = await newTrick.save();
-            res.send({data: result});
+            res.send({data: result}).status(200);
             // console.log('111 create ', {data: result});
-    }catch (e) {
-        res.statusCode(500).send(e);
+    }catch (err) {
+        res.status(500).send(err);
     }
 }
 
@@ -34,9 +35,9 @@ module.exports.deleteTrick = async (req, res, next) => {
     try{
         const deleteTrick = Trick.deleteOne({_id: req.params.id});
         const result = await deleteTrick;
-        res.send({data: result});
-    }catch (e) {
-        res.statusCode(500).send(e);
+        res.send({data: result}).status(200);
+    }catch (err) {
+        res.status(500).send(err);
     }
 }
 
@@ -53,8 +54,8 @@ module.exports.updateTrick = async (req, res, next) => {
                     date: date,
                     textComplaints: textComplaints}
             });
-        res.send(updateTrick);
-    } catch (e) {
-        res.status(500).send(e);
+        res.send(updateTrick).status(200);
+    } catch (err) {
+        res.status(500).send(err);
     }
 }

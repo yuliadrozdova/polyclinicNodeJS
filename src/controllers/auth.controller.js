@@ -16,6 +16,6 @@ module.exports.auth = async (req, res, next) => {
         }
 
     }else{
-        res.send().statusCode(500);
+        res.send().status(500);
     }
 }

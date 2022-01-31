@@ -12,7 +12,7 @@ const generateAT = (id) =>{
 //get all users
 module.exports.getAllUsers = (req, res, next) => {
     User.find().then(result => {
-        res.send({data: result});
+        res.send({data: result}).status(200);
     });
 }
 
@@ -31,11 +31,8 @@ module.exports.createUser = async (req, res, next) => {
     const passwordHash = bcrypt.hashSync(password, 7);
     const newUser = new User({login, password: passwordHash});
     newUser.save().then(result => {
-        res.send('User created');
-        // console.log(result);
+        res.send('User created').status(200);
     }).catch(err => console.log(err))
-
-    // console.log('12345')
 
     const token = generateAT(newUser._id); // не уверена
     return res.json({token});
@@ -59,3 +56,16 @@ module.exports.loginUser = async (req, res, next) => {
     const token = generateAT(user._id);
     return res.json({token});
 }
+
+// //refresh token
+// module.exports.refreshToken = async (req, res, next) => {
+//     const token = req.headers.authorization;
+//     try {
+//         const decoded = jwt.verify(token, 'refToken123')
+//         const refreshToken = generateAT(decoded._id);
+//         res.send(refreshToken).status(200);
+//     } catch (err) {
+//         res.send(err).status(400);
+//     }
+// }
+
