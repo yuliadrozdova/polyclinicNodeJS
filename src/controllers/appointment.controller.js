@@ -3,7 +3,7 @@ const Trick = require("../db/models/appointmentModel");
 //get all Tricks +
 module.exports.getAllTricks = async (req, res, next) => {
 
-    console.log('222 ', req.userId);
+    // console.log('222 ', req.userId);
 
     try {
         const result = await Trick.find({createdBy: req.userId});
@@ -16,7 +16,7 @@ module.exports.getAllTricks = async (req, res, next) => {
 
 //create Trick +
 module.exports.createTrick = async (req, res, next) => {
-    console.log('333 ', req.userId);
+    // console.log('333 ', req.userId);
     try{
         const createdBy = req.userId;
         const {namePatient, nameDoctor, date, textComplaints} = req.body;
@@ -44,7 +44,7 @@ module.exports.deleteTrick = async (req, res, next) => {
 //update Trick +
 module.exports.updateTrick = async (req, res, next) => {
 
-    console.log(req.body)
+    // console.log(req.body)
     const {namePatient, nameDoctor, date, textComplaints, id} = req.body;
     try {
         const updateTrick = await Trick.updateOne({_id : id},

@@ -32,7 +32,7 @@ module.exports.createUser = async (req, res, next) => {
     const newUser = new User({login, password: passwordHash});
     newUser.save().then(result => {
         res.send('User created').status(200);
-    }).catch(err => console.log(err))
+    }).catch(err => console.error('ERROR CREATE USER:', err))
 
     const token = generateAT(newUser._id); // не уверена
     return res.json({token});
@@ -54,18 +54,26 @@ module.exports.loginUser = async (req, res, next) => {
         return res.status(400).json({message: "not valid ${user}"})
     }
     const token = generateAT(user._id);
+    // console.log('token', token)
     return res.json({token});
 }
 
-// //refresh token
-// module.exports.refreshToken = async (req, res, next) => {
-//     const token = req.headers.authorization;
-//     try {
-//         const decoded = jwt.verify(token, 'refToken123')
-//         const refreshToken = generateAT(decoded._id);
-//         res.send(refreshToken).status(200);
-//     } catch (err) {
-//         res.send(err).status(400);
-//     }
-// }
+//refresh token
+module.exports.refreshToken = async (req, res, next) => {
+    // console.log('0000')
+
+    if(req.headers.authorization === undefined ||
+        req.headers.authorization === "undefined"){
+        return;
+    }
+
+    const token = req.headers.authorization;
+    try {
+        const decoded = jwt.verify(token, 'refToken123')
+        const refreshToken = generateAT(decoded._id);
+        res.send(refreshToken).status(200);
+    } catch (err) {
+        res.send(err).status(400);
+    }
+}
 
