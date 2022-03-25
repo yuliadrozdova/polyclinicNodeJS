@@ -1,4 +1,3 @@
-
 const express = require('express');
 const mongoose = require('mongoose');
 const app = express();
@@ -8,18 +7,13 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 const cors = require('cors');
 app.use(cors());
-const apiRoutes = require("./src/routes/routes");
+const userRoutes = require("./src/routes/user.routes");
+const appointmentRoutes = require("./src/routes/appointment.routes");
 
-const uri = "mongodb+srv://user_01:CK9qTqZ5@cluster0.ijpew.mongodb.net/PolyclinicAppDB?retryWrites=true&w=majority";
-mongoose.connect(uri);
+mongoose.connect("mongodb+srv://user_01:CK9qTqZ5@cluster0.ijpew.mongodb.net/PolyclinicAppDB?retryWrites=true&w=majority");
 
-app.use('/', apiRoutes);
-
-
-
-
-// global error handler
-
+app.use(userRoutes);
+app.use(appointmentRoutes)
 
 app.listen(4000, () =>{
     console.log('Example app listening on port 4000')
