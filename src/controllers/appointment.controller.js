@@ -1,50 +1,53 @@
-const Trick = require("../db/models/appointmentModel");
+const Trick = require("../db/models/appointment.model");
 
-//get all Tricks +
-module.exports.getAllTricks = async (req, res, next) => {
-
-    console.log('222 ', req.userId);
-
+/**
+ * { GET } /allTricks
+ * @description get all user tricks
+ */
+module.exports.getAllTricks = async (req, res) => {
     try {
         const result = await Trick.find({createdBy: req.userId});
         res.send({data: result}).status(200);
     } catch (err) {
-        // res.statusCode(500).send(err);
-        res.status(500).send(err);
+        res.status(401).send('401')
     }
 }
 
-//create Trick +
+/**
+ * { POST } /createTrick
+ * @description create user trick
+ */
 module.exports.createTrick = async (req, res, next) => {
-    console.log('333 ', req.userId);
     try{
         const createdBy = req.userId;
         const {namePatient, nameDoctor, date, textComplaints} = req.body;
         const newTrick = new Trick({createdBy, namePatient, nameDoctor, date, textComplaints});
         const result = await newTrick.save();
             res.send({data: result}).status(200);
-            // console.log('111 create ', {data: result});
     }catch (err) {
-        res.status(500).send(err);
+        res.status(403).send(err);
     }
 }
 
-
-//delete trick +
+/**
+ * { POST } /deleteTrick
+ * @description delete user trick
+ */
 module.exports.deleteTrick = async (req, res, next) => {
     try{
         const deleteTrick = Trick.deleteOne({_id: req.params.id});
         const result = await deleteTrick;
         res.send({data: result}).status(200);
     }catch (err) {
-        res.status(500).send(err);
+        res.status(403).send(err);
     }
 }
 
-//update Trick +
+/**
+ * { POST } /updateTrick
+ * @description update user trick
+ */
 module.exports.updateTrick = async (req, res, next) => {
-
-    console.log(req.body)
     const {namePatient, nameDoctor, date, textComplaints, id} = req.body;
     try {
         const updateTrick = await Trick.updateOne({_id : id},
@@ -56,6 +59,6 @@ module.exports.updateTrick = async (req, res, next) => {
             });
         res.send(updateTrick).status(200);
     } catch (err) {
-        res.status(500).send(err);
+        res.status(403).send(err);
     }
 }

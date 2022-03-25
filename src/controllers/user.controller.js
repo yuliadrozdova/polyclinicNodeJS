@@ -1,71 +1,76 @@
-const User = require("../db/models/userModel");
+const User = require("../db/models/user.model");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const {secret} = require("./config");
+const {genAccessToken} = require("./genAccessToken");
+const {secretToken, secretRefToken} = require("./config");
 
-const generateAT = (id) =>{
-    const payload = { id };
-    return jwt.sign(payload, secret, {expiresIn: "24h"});
-}
-
-
-//get all users
+/**
+ * { GET } /all users
+ * @description get all users
+ */
 module.exports.getAllUsers = (req, res, next) => {
     User.find().then(result => {
         res.send({data: result}).status(200);
     });
 }
 
-//create user
+/**
+ * { POST } /createUser
+ * @description create user
+ */
 module.exports.createUser = async (req, res, next) => {
     const {login, password} = req.body;
     const user = await User.findOne({login});
 
     if (user){
-        return res.status(400).json({message: "user ${user} already exists"})
+        return res.status(401).json({message: "user ${user} already exists"})
     }
     if ((login === '' || password === '') || (login === '' && password === '')) {
-        return res.status(400).json({message: "not valid ${user}"})
+        return res.status(401).json({message: "not valid ${user}"})
     }
 
     const passwordHash = bcrypt.hashSync(password, 7);
     const newUser = new User({login, password: passwordHash});
     newUser.save().then(result => {
         res.send('User created').status(200);
-    }).catch(err => console.log(err))
-
-    const token = generateAT(newUser._id); // не уверена
-    return res.json({token});
-
+    }).catch(err => console.error('ERROR CREATE USER:', err))
+    const token = genAccessToken(newUser._id);
+    return res.json(token);
 }
 
-//login User
+/**
+ * { POST } /loginUser
+ * @description login user
+ */
 module.exports.loginUser = async (req, res, next) => {
     const {login, password} = req.body;
     const user = await User.findOne({login});
-
     if (!user){
-        return res.status(400).json({message: "user ${user} not found"})
+        return res.status(401).json({message: "user ${user} not found"})
     }
-
     const validPas = bcrypt.compareSync(password, user.password);
-    // console.log(password);
     if (!validPas){
-        return res.status(400).json({message: "not valid ${user}"})
+        return res.status(401).json({message: "not valid ${user}"})
     }
-    const token = generateAT(user._id);
-    return res.json({token});
+    const token = genAccessToken(user._id);
+    return res.json(token);
 }
 
-// //refresh token
-// module.exports.refreshToken = async (req, res, next) => {
-//     const token = req.headers.authorization;
-//     try {
-//         const decoded = jwt.verify(token, 'refToken123')
-//         const refreshToken = generateAT(decoded._id);
-//         res.send(refreshToken).status(200);
-//     } catch (err) {
-//         res.send(err).status(400);
-//     }
-// }
-
+/**
+ * { POST } /refreshToken
+ * @description refresh token
+ */
+module.exports.refreshToken = async (req, res, next) => {
+    const refToken = req.headers.authorization;
+    if(!refToken){
+        return res.status(403).send();
+    }
+    try {
+        const decoded = jwt.verify(refToken, secretRefToken)
+        const refreshToken = genAccessToken(decoded._id);
+        res.status(200).send(refreshToken);
+    } catch (err) {
+        console.error('ERROR REFRESH TOKEN:', err)
+        res.status(401).send(err);
+    }
+}
